@@ -1,4 +1,3 @@
-import './App.css';
 import { TodoForm } from './Components/TodoForm/TodoForm';
 
 function App() {
