@@ -1,15 +1,25 @@
-import React, {useState} from "react";
+import React, {useContext, useState} from "react";
 import styled from "styled-components";
+import { TodoContext } from "../store/TodoContext";
 
-export const AddTodo = ({add}) => {
+export const AddTodo = () => {
   const [text, setText] = useState("");
+  const {dispatch} = useContext(TodoContext)
+
+  const addTodo = (e) => {
+    e.preventDefault();
+    dispatch({type: "ADD", text: text})
+    setText("")
+  }
   return (
     <Form>
       <StyledInput placeholder="Type here something..." value={text} onChange={event => setText(event.target.value)} />
-      <AddButton onClick={() => {add(text); setText("")}}>Add</AddButton>
+      <AddButton onClick={addTodo}>Add</AddButton>
     </Form>
   );
 }
+
+
 const StyledInput = styled.input`
     width: 27rem;
     height: 2.5rem;

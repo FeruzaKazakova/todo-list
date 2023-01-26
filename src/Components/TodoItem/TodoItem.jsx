@@ -1,35 +1,51 @@
-import React, {useReducer, useState} from "react";
+import React, {useContext, useReducer, useState} from "react";
 import styled from "styled-components";
+import { TodoContext } from "../store/TodoContext";
 
-export const TodoItem = ({ todo, remove, edit }) => {
-  const [state, setState] = useState("list");
+export const TodoItem = ({ todo }) => {
+  const [state, setState] = useState(false);
   const [text, setText] = useState(todo.text);
+  const {dispatch, editTodo} = useContext(TodoContext)
   const [checked, toggle] = useReducer((checked) => !checked, false);
+
+  const removeTodo = (e) => {
+    e.preventDefault();
+    dispatch({type: "DELETE", id: todo.id})
+  }
+
   return (
     <List>
     <Container>
-      {state === "list"
+      {state === false
         ? <>
         <Cont>
         <StyledInput type={'checkbox'} value={checked} onChange={toggle}/>
           <StyledTitle style={{ textDecoration: checked ? "line-through" : "" }}>{todo.text}</StyledTitle>
           </Cont>
           <Buttons>
-          <EditButton onClick={() => setState("EDIT")}>Edit</EditButton>  
-          <DeleteButton onClick={remove}>Delete</DeleteButton>
+          <EditButton onClick={() => {
+           
+            setState(true)
+            }}>Edit</EditButton>  
+          <DeleteButton onClick={removeTodo}>Delete</DeleteButton>
           </Buttons>
         </>
         : <>
           <EditInput value={text} onChange={event => setText(event.target.value)} />
           <EditButtons>
-          <EditButton onClick={() => {edit(text); setState("list");}}>Save</EditButton>
-          <EditButton onClick={() => setState("list")}>Cancel</EditButton>
+          <EditButton onClick={() =>  { 
+            editTodo(text,todo.id)  
+            setState(false)
+            }}>Save</EditButton>
+          <DeleteButton onClick={removeTodo}>Delete</DeleteButton>
           </EditButtons>
         </>}
     </Container>
     </List>
   );
 }
+
+
 
 const List = styled.ul`
     list-style: none;

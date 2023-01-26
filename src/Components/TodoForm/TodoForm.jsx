@@ -1,8 +1,9 @@
-import React, { useReducer } from "react";
+import React, { useContext, useReducer } from "react";
 import { AddTodo } from "../AddTodo/AddTodo.jsx";
+import { TodoContext } from "../store/TodoContext.js";
 import { TodoItem } from "../TodoItem/TodoItem.jsx";
 
-const initialState = {
+export const initialState = {
     counter: 2,
     todos: [{
       id: 1,
@@ -10,7 +11,7 @@ const initialState = {
     }],
   };
   
-  const reducer = (state, action) => {
+ export const reducer = (state, action) => {
     switch (action.type) {
       case "ADD":
         {
@@ -52,17 +53,13 @@ const initialState = {
   };
 
 export const TodoForm = () => {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const {state2} = useContext(TodoContext)
+
   return (<>
-    <AddTodo
-      add={text => dispatch({type: "ADD", text: text})}
-    />
-    {state.todos.map(t => (
-      <TodoItem
-        key={t.id}
-        todo={t}
-        remove={() => dispatch({type: "DELETE", id: t.id})}
-        edit={text => dispatch({type: "EDIT", id: t.id, text: text})}
+    <AddTodo/>
+
+    {state2.todos.map(t => (
+      <TodoItem key={t.id} todo={t}
       />
     ))}
   </>);
